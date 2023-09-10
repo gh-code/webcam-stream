@@ -1,0 +1,67 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Webcam</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+<div>
+<div>
+<img src="/cam" width="640">
+</div>
+<div class="buttons">
+<div class="left">
+<input class="unicode" type="button" value="📷" onclick="take_picture()" title="Take picture" />
+</div>
+<div class="right">
+<input class="unicode" type="button" value="🎥" onclick="record(5)" title="Record video for 5 seconds" />
+</div>
+</div>
+</div>
+</div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script type="text/javascript">
+let error = function (jqXHR, exception) {
+  var msg = '';
+  if (jqXHR.status === 0) {
+      msg = 'Not connect.\n Verify Network.';
+  } else if (jqXHR.status == 404) {
+      msg = 'Requested page not found. [404]';
+  } else if (jqXHR.status == 500) {
+      msg = 'Internal Server Error [500].';
+  } else if (exception === 'parsererror') {
+      msg = 'Requested JSON parse failed.';
+  } else if (exception === 'timeout') {
+      msg = 'Time out error.';
+  } else if (exception === 'abort') {
+      msg = 'Ajax request aborted.';
+  } else {
+      msg = 'Uncaught Error.\n' + jqXHR.responseText;
+  }
+  alert(msg);
+};
+
+function record(seconds) {
+  $.ajax({
+    url: "/cam/record/" + seconds,
+    success: function (result) {
+      window.location.href = '/live.avi';
+    },
+    error: error
+  });
+}
+
+function take_picture() {
+  $.ajax({
+    url: "/cam/take/picture",
+    success: function (result) {
+      window.open('/output.jpg');
+    },
+    error: error
+  });
+}
+</script>
+</body>
+</html>
